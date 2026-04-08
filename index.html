@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hook Builder</title>
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -18,244 +15,296 @@
       --border: #30363d;
       --text: #f0f0f5;
       --text-dim: #8b949e;
-      --accent: #58a6ff;
-      --green: #3fb950;
-      --red: #f85149;
+      --accent: #f72585;
+      --accent2: #4cc9f0;
     }
     
     body {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Syne', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
     }
     
-    #root {
+    .hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      text-align: center;
       padding: 2rem;
+      position: relative;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, #261447 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, #1a1a2e 0%, transparent 50%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+    
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
     
     h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-    
-    .subtitle {
-      color: var(--text-dim);
-      margin-bottom: 2rem;
-    }
-    
-    .app {
-      width: 100%;
-      max-width: 450px;
-    }
-    
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-    }
-    
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .stat {
-      text-align: center;
-    }
-    
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-    
-    .todo-list {
-      margin-bottom: 1rem;
-    }
-    
-    .todo-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: var(--bg);
-      transition: opacity 0.2s;
-    }
-    
-    .todo-item.completed {
-      opacity: 0.5;
-    }
-    
-    .todo-item.completed .todo-text {
-      text-decoration: line-through;
-    }
-    
-    .todo-checkbox {
-      width: 1.25rem;
-      height: 1.25rem;
-      margin-right: 0.75rem;
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: float 6s ease-in-out infinite;
       cursor: pointer;
+      transition: transform 0.3s;
     }
     
-    .todo-text {
-      flex: 1;
-      font-size: 0.95rem;
-    }
-    
-    .todo-delete {
-      background: none;
-      border: none;
-      color: var(--red);
-      cursor: pointer;
-      padding: 0.25rem 0.5rem;
-      font-size: 1rem;
-      opacity: 0.5;
-      transition: opacity 0.2s;
-    }
-    
-    .todo-delete:hover {
-      opacity: 1;
-    }
-    
-    .input-group {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .input-group input {
-      flex: 1;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      background: var(--bg);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.9rem;
-    }
-    
-    .input-group input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-    
-    .add-btn {
-      padding: 0.75rem 1.25rem;
-      background: var(--accent);
-      border: none;
-      border-radius: 0.5rem;
-      color: #000;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-    
-    .add-btn:hover {
+    h1:hover {
       transform: scale(1.05);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    p {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      max-width: 600px;
+      margin-top: 1.5rem;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+    
+    .date {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.875rem;
+      opacity: 0.5;
+    }
+    
+    .controls {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .controls button {
+      font-family: 'Space Grotesk', sans-serif;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--text);
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .controls button:hover {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .mouse-pos {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.75rem;
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <canvas id="canvas"></canvas>
   
-  <script type="text/babel">
-    const { useState } = React;
+  <div class="date">Wednesday, April 8, 2026</div>
+  
+  <div class="hero">
+    <h1 id="title">Hook Builder</h1>
+    <p>Attention-grabbing video hooks</p>
+  </div>
+  
+  <div class="controls">
+    <button onclick="changeMode('particles')">Particles</button>
+    <button onclick="changeMode('waves')">Waves</button>
+    <button onclick="changeMode('circles')">Circles</button>
+  </div>
+  
+  <div class="mouse-pos" id="mousePos">x: 0, y: 0</div>
+  
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let mode = 'particles';
+    let particles = [];
+    let mouse = { x: 0, y: 0 };
     
-    function App() {
-      const [todos, setTodos] = useState([
-        { id: 1, text: 'Welcome to your todo list!', done: false },
-        { id: 2, text: 'Click to check off items', done: true },
-        { id: 3, text: 'Add your own tasks below', done: false },
-      ]);
-      const [input, setInput] = useState('');
-      
-      const addTodo = () => {
-        if (input.trim()) {
-          setTodos([...todos, { id: Date.now(), text: input, done: false }]);
-          setInput('');
-        }
-      };
-      
-      const toggle = (id) => {
-        setTodos(todos.map(t => t.id === id ? { ...t, done: !t.done } : t));
-      };
-      
-      const deleteTodo = (id) => {
-        setTodos(todos.filter(t => t.id !== id));
-      };
-      
-      const completed = todos.filter(t => t.done).length;
-      const remaining = todos.length - completed;
-      
-      return (
-        <div className="app">
-          <h1>Hook Builder</h1>
-          <p className="subtitle">Attention-grabbing video hooks</p>
-          
-          <div className="card">
-            <div className="stats">
-              <div className="stat">
-                <div className="stat-value">{todos.length}</div>
-                <div className="stat-label">Total</div>
-              </div>
-              <div className="stat">
-                <div className="stat-value" style={{color: '#3fb950'}}>{completed}</div>
-                <div className="stat-label">Done</div>
-              </div>
-              <div className="stat">
-                <div className="stat-value" style={{color: '#58a6ff'}}>{remaining}</div>
-                <div className="stat-label">Left</div>
-              </div>
-            </div>
-            
-            <div className="todo-list">
-              {todos.map(todo => (
-                <div key={todo.id} className={`todo-item ${todo.done ? 'completed' : ''}`}>
-                  <input 
-                    type="checkbox" 
-                    className="todo-checkbox"
-                    checked={todo.done} 
-                    onChange={() => toggle(todo.id)}
-                  />
-                  <span className="todo-text">{todo.text}</span>
-                  <button className="todo-delete" onClick={() => deleteTodo(todo.id)}>✕</button>
-                </div>
-              ))}
-            </div>
-            
-            <div className="input-group">
-              <input 
-                type="text" 
-                placeholder="Add a task..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-              />
-              <button className="add-btn" onClick={addTodo}>Add</button>
-            </div>
-          </div>
-        </div>
-      );
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     }
     
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    window.addEventListener('resize', resize);
+    resize();
+    
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      document.getElementById('mousePos').textContent = `x: ${mouse.x}, y: ${mouse.y}`;
+    });
+    
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.size = Math.random() * 3 + 1;
+        this.hue = Math.random() * 60 + 280;
+      }
+      
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+        
+        // Mouse interaction
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 150) {
+          this.vx -= dx * 0.001;
+          this.vy -= dy * 0.001;
+        }
+      }
+      
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, 0.8)`;
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < 100; i++) {
+      particles.push(new Particle());
+    }
+    
+    function drawParticles() {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      ctx.fillRect(0, 0, width, height);
+      
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      
+      // Connect nearby particles
+      particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(247, 37, 133, ${1 - dist/100})`;
+            ctx.stroke();
+          }
+        });
+      });
+    }
+    
+    function drawWaves() {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      ctx.fillRect(0, 0, width, height);
+      
+      const time = Date.now() * 0.001;
+      
+      for (let y = 0; y < height; y += 20) {
+        ctx.beginPath();
+        for (let x = 0; x < width; x += 5) {
+          const yOffset = Math.sin(x * 0.01 + time + y * 0.01) * 30;
+          if (x === 0) {
+            ctx.moveTo(x, y + yOffset);
+          } else {
+            ctx.lineTo(x, y + yOffset);
+          }
+        }
+        ctx.strokeStyle = `hsla(${(y / height) * 60 + 280}, 80%, 60%, 0.5)`;
+        ctx.stroke();
+      }
+    }
+    
+    function drawCircles() {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      ctx.fillRect(0, 0, width, height);
+      
+      const time = Date.now() * 0.002;
+      
+      for (let i = 0; i < 10; i++) {
+        const x = width/2 + Math.cos(time + i) * 100;
+        const y = height/2 + Math.sin(time + i * 0.7) * 100;
+        const r = 50 + i * 20;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(${i * 30 + 280}, 80%, 60%, 0.5)`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+    
+    function animate() {
+      if (mode === 'particles') drawParticles();
+      else if (mode === 'waves') drawWaves();
+      else if (mode === 'circles') drawCircles();
+      requestAnimationFrame(animate);
+    }
+    
+    window.changeMode = function(m) {
+      mode = m;
+    };
+    
+    // Interactive title
+    const title = document.getElementById('title');
+    title.addEventListener('click', () => {
+      title.style.animation = 'none';
+      title.offsetHeight;
+      title.style.animation = 'float 0.5s ease-in-out';
+    });
+    
+    animate();
   </script>
 </body>
 </html>
